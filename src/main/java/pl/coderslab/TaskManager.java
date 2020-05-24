@@ -173,7 +173,6 @@ public class TaskManager {
             }
         }
     }
-
     private static void listTask(Scanner scan, String nazwaPliku) {
         int rowc = 0;
         String[][] taskTab = new String[numberOfLine(nazwaPliku)][3];
@@ -182,14 +181,15 @@ public class TaskManager {
             String inputLine = "";
             while (scan.hasNextLine()) {
                 inputLine = scan.nextLine();
+
                 String[] rowArr = inputLine.split(",");
-                System.out.println(Arrays.toString(rowArr));
+//                System.out.println(Arrays.toString(rowArr));
                 for ( int i = 0; i < rowArr.length; i++ ) {
                     taskTab[rowc][i] = rowArr[i];
-//                    System.out.print(taskTab[rowc][i]);
+                    System.out.print(taskTab[rowc][i]);
                 }
                 rowc++;
-//                System.out.println("\n");
+                System.out.println("\n");
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
