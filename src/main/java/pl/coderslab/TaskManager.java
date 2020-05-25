@@ -40,12 +40,11 @@ public class TaskManager {
                     default:
                         System.out.println(ConsoleColors.RED + "Please select a correct option.");
                 }
-
                 if ("exit".equals(choosenButton)) {
                     System.out.print(ConsoleColors.RED_BOLD + "bye bye");
                     break;
-                }System.out.println(choosenButton);
-
+                }
+                System.out.println(choosenButton);
             }
         }
         scanner.close();
@@ -75,9 +74,6 @@ public class TaskManager {
                 }
                 tempList.add(smth);
             }
-            for ( String lines : tempList ) {
-                System.out.println(lines);
-            }
             Files.write(path, tempList, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
@@ -104,45 +100,22 @@ public class TaskManager {
         List<String> lines = null;
         try {
             String[] nowaLinia = new String[3];
+
             System.out.println("Write the description of a new task");
-            String describe = "";
-            String describeCrected = "";
-            while (true) {
-                describe = scanner.nextLine();
-                describeCrected = describe.replaceAll(",", "  ");
-                if (!StringUtils.isEmpty(describe)) {
-                    break;
-                } else {
-                    System.out.println("This field cannot be empty. Write something");
-                }
-            }
+            String describeCrected = getStringFromUser(scanner);
             StringBuilder builder = new StringBuilder();
             builder.append(numberOfLine(nazwaPliku));
             builder.append(" : ");
             builder.append(describeCrected);
             nowaLinia[0] = builder.toString();
+
             System.out.println("Write due date");
-            String dt = "";
-            while (true) {
-                dt = scanner.nextLine();
-                if (GenericValidator.isDate(dt, "yyyy-MM-dd", true)) {
-                    break;
-                } else {
-                    System.out.println("Please enter Date in this format YYYY-MM-DD");
-                }
-            }
+            String dt = getAndCheckDate(scanner);
             nowaLinia[1] = dt;
+
             System.out.println("Is it important or no [put true or false]");
-            String importance = "";
-            while (scanner.hasNextLine()) {
-                importance = scanner.nextLine();
-                if (importance.contains("true") || importance.contains("false")) {
-                    nowaLinia[2] = importance;
-                    break;
-                } else {
-                    System.out.println("You should enter true or false, nothing else");
-                }
-            }
+            String importance = getStringImportance(scanner);
+            nowaLinia[2] = importance;
             String newLine = Arrays.toString(nowaLinia);
             String out = newLine.substring(newLine.indexOf("[") + 1, newLine.indexOf("]"));
             Path path = Paths.get(nazwaPliku);
@@ -163,6 +136,48 @@ public class TaskManager {
         listTask(scanner, nazwaPliku);
     }
 
+    private static String getStringImportance(Scanner scanner) {
+        String importance = "";
+        while (scanner.hasNextLine()) {
+            importance = scanner.nextLine();
+            if (importance.contains("true") || importance.contains("false")) {
+
+                break;
+            } else {
+                System.out.println("You should enter true or false, nothing else");
+            }
+        }
+        return importance;
+    }
+
+    private static String getAndCheckDate(Scanner scanner) {
+        String dt = "";
+        while (true) {
+            dt = scanner.nextLine();
+            if (GenericValidator.isDate(dt, "yyyy-MM-dd", true)) {
+                break;
+            } else {
+                System.out.println("Please enter Date in this format YYYY-MM-DD");
+            }
+        }
+        return dt;
+    }
+
+    private static String getStringFromUser(Scanner scanner) {
+        String describe = "";
+        String describeCrected = "";
+        while (true) {
+            describe = scanner.nextLine();
+            describeCrected = describe.replaceAll(",", "  ");
+            if (!StringUtils.isEmpty(describe)) {
+                break;
+            } else {
+                System.out.println("This field cannot be empty. Write something");
+            }
+        }
+        return describeCrected;
+    }
+
     private static void fileExistOrNo(String nazwaPliku) {
         if (!Files.exists(Paths.get(nazwaPliku))) {
             try {
@@ -173,6 +188,7 @@ public class TaskManager {
             }
         }
     }
+
     private static void listTask(Scanner scan, String nazwaPliku) {
         int rowc = 0;
         String[][] taskTab = new String[numberOfLine(nazwaPliku)][3];
@@ -183,7 +199,6 @@ public class TaskManager {
                 inputLine = scan.nextLine();
 
                 String[] rowArr = inputLine.split(",");
-//                System.out.println(Arrays.toString(rowArr));
                 for ( int i = 0; i < rowArr.length; i++ ) {
                     taskTab[rowc][i] = rowArr[i];
                     System.out.print(taskTab[rowc][i]);
@@ -194,13 +209,8 @@ public class TaskManager {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-//        for ( int i = 0; i < taskTab.length; i++ ) {
-//            for ( int j = 0; j < taskTab[i].length; j++ ) {
-//                System.out.print(taskTab[i][j]);
-//            }
-//            System.out.println("\n");
     }
-    //    }
+
     private static int numberOfLine(String fName) {
         Path path1 = Paths.get(fName);
         int count = 0;
