@@ -5,7 +5,7 @@
 https://github.com/Roman92P/list-manager
 ##  Instrukcja instalacji
 ## Autor and license
-*Autor: Roman Pashko. Licencja MIT License*
+*Autor: Roman Pashkov. Licencja MIT License*
 ## Technologies
 *Java*
 ## Inspiration
